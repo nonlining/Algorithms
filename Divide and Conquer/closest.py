@@ -1,59 +1,62 @@
 #Uses python2
 
-def MergeSortedArray(lst1 ,lst2):
-
-    Res = []
-    lst1Len = 0
-    lst2Len = 0
-    cp = 0
-
-    while lst1Len < len(lst1) and lst2Len < len(lst2):
-
-        if lst1[lst1Len] <= lst2[lst2Len]:
-            Res.append(lst1[lst1Len])
-            lst1Len += 1
-        else:
-            Res.append(lst2[lst2Len])
-
-            cp += len(lst1) - lst1Len
-            lst2Len += 1
-
-    if lst1Len < len(lst1):
-        Res.extend(lst1[lst1Len:])
-
-    if lst2Len < len(lst2):
-        Res.extend(lst2[lst2Len:])
-
-    return Res, cp
+import math
+import random
 
 
-def mergeSort(data, n):
-    cp = 0
-    if n == 1:
-        return data, cp
+def distance(p1, p2):
+    return math.sqrt((p1[0]- p2[0])**2+(p1[1]- p2[1])**2)
 
-    a = data[:n/2]
-    b = data[n/2:]
+def minimum_distance(points):
 
-    ma, na= mergeSort(a, len(a))
-    mb, nb = mergeSort(b, len(b))
+    if len(points) < 4:
+        minD = float('inf')
+        for i in range(len(points)):
+            for j in range(i+1, len(points)):
+                minD = min(minD, distance(points[i], points[j]))
+        return minD
+    mid = len(points)/2
+    l = minimum_distance(points[:mid])
+    r = minimum_distance(points[mid:])
+    d = min(l,r)
+    midPoint = points[mid]
 
-    res,cp = MergeSortedArray(ma, mb)
+    closetToMidLine = []
 
-    return (res, cp + na + nb)
+    for i in points:
+        if abs(midPoint[0] - i[0]) < d:
+            print 'd', d, abs(midPoint[0] - i[0]), midPoint, i
+            closetToMidLine.append(i)
+    tempMin = d
+    closetToMidLine.sort(key=lambda x : (x[1],x[0]))
+    print closetToMidLine
 
+    for i in range(len(closetToMidLine)):
+        maxTry = 0
+        for j in range(i+1, len(closetToMidLine)):
+            if maxTry > 3:
+                break
+            print maxTry, closetToMidLine[i], closetToMidLine[j]
+            tempMin = min(tempMin, distance(closetToMidLine[i],closetToMidLine[j]))
+            maxTry += 1
 
+    d = min(tempMin,d)
 
-def minimum_distance(data, n):
-    res, cp = mergeSort(data, n)
-
-    return cp
+    return d
 
 if __name__ == '__main__':
-    n = int(raw_input())
-    data = map(int, raw_input().split(' '))
-    #n = 6
-    #data = [9, 8, 7, 3, 2, 1]
-    # 15
-    print minimum_distance(data, n)
+    #n = int(raw_input())
+    x = []
+    y = []
+    #while n:
+    #    px, py = map(int, raw_input().split(' '))
+    #    x.append(px)
+    #    y.append(py)
+    #    n -= 1
+    x = random.sample(range(0,300), 20)
+    y = random.sample(range(0,300), 20)
 
+    points = zip(x, y)
+    points.sort(key=lambda x : (x[0],x[1]))
+
+    print("{0:.6f}".format(minimum_distance(points)))
