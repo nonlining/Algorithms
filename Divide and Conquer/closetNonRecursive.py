@@ -16,8 +16,6 @@ def b_force(points, start, end):
 
 
 def min_distance(points):
-    #print points
-
     start = 0
     end = len(points)
     step = 2
@@ -40,8 +38,6 @@ def min_distance(points):
         start += step
 
     minD = 0
-    #print q
-
     while len(q) > 0:
         l = q.popleft()
         start = l[1][0]
@@ -72,12 +68,9 @@ def min_distance(points):
                 maxTry += 1
         minD = min(tempMin,minD)
         tempq.append((minD, (start, end)))
-        #print q
-        #print 'temp', tempq
         if len(q) == 0:
             q.extend(tempq)
             tempq.clear()
-            #print q
         if len(q) == 1 and len(tempq) == 0:
             break
     return q.popleft()[0]
@@ -86,15 +79,7 @@ def min_distance(points):
 
 
 if __name__ == '__main__':
-    #n = int(raw_input())
-    #x = []
-    #y = []
-    #while n:
-    #    px, py = map(int, raw_input().split(' '))
-    #    x.append(px)
-    #    y.append(py)
-    #    n -= 1
-
+    # test case
     #x = [4,-2,-3,-1,2,-4,1,-1,3,-4,-2]
     #y = [4,-2,-4,3,3,0,1,-1,-1,2,4]
     #x = [7, 1, 4, 7]
