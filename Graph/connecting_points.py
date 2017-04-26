@@ -1,14 +1,42 @@
 #Uses python3
 import sys
 import math
+import heapq
 
-def minimum_distance(x, y):
+def dist(x1, y1, x2, y2):
+    return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+
+
+def minimum_distance(adj, weight):
     result = 0.
-    #write your code here
-    return result
+    dist = [float('inf')]*len(adj)
+    dist[0] = 0
+    visited = set()
+
+    cost = [(i,d) for d, i in enumerate(dist)]
+
+    visited.add(0)
+    heapq.heapify(cost)
+
+    while len(cost) != 0:
+        u = cost[0]
+
+        visited.add(u[1])
+
+        heapq.heappop(cost)
+
+        for v in adj[u[1]]:
+            if (v not in visited and dist[v] > weight[u[1]][v]) :
+                dist[v] = weight[u[1]][v]
+                cost = [(i,d) for d, i in enumerate(dist)]
+                heapq.heapify(cost)
+
+    return sum(dist)
+
 
 
 if __name__ == '__main__':
+
     n = int(sys.stdin.readline())
     x = []
     y = []
@@ -16,4 +44,20 @@ if __name__ == '__main__':
         a, b = map(int, sys.stdin.readline().split())
         x.append(a)
         y.append(b)
-    print("{0:.9f}".format(minimum_distance(x, y)))
+
+    adj = [[] for _ in range(n)]
+    weight = [[0]*n for _ in range(n)]
+    for i in range(n):
+        adj[i] = list(v for v in range(n) if v != i)
+        for j in range(n):
+            if i != j:
+                w = dist(x[i], y[i], x[j], y[j])
+                weight[i][j] = w
+                weight[j][i] = w
+
+    #weight = [[0, 2.0, 1.4142135623730951, 3.0, 3.605551275463989], [2.0, 0, 1.4142135623730951, 3.605551275463989, 3.0], [1.4142135623730951, 1.4142135623730951, 0, 2.23606797749979, 2.23606797749979], [3.0, 3.605551275463989, 2.23606797749979, 0, 2.0], [3.605551275463989, 3.0, 2.23606797749979, 2.0, 0]]
+
+    #adj = [[1, 2, 3, 4], [0, 2, 3, 4], [0, 1, 3, 4], [0, 1, 2, 4], [0, 1, 2, 3]]
+
+
+    print("{0:.9f}".format(minimum_distance(adj, weight)))
