@@ -1,7 +1,7 @@
 #Uses python3
 import sys
-import queue
-#import heapq
+#import queue
+import heapq
 
 
 def shortet_paths(adj, cost, s, distance, reachable, shortest):
@@ -21,14 +21,18 @@ def shortet_paths(adj, cost, s, distance, reachable, shortest):
                     else:
                         if v not in queue:
                             queue.append(v)
+    heapq.heapify(queue)
 
-    while queue:
-        u = queue.pop(0)
+    while len(queue) != 0:
+        u = queue[0]
+        heapq.heappop(queue)
+
         visited[u] = True
         shortest[u] = 0
         for v in adj[u]:
             if not visited[v] and v not in queue:
                 queue.append(v)
+                heapq.heapify(queue)
 
 
 if __name__ == '__main__':

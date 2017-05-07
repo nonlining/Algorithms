@@ -16,9 +16,7 @@ def distance(adj, cost, s, t):
     while len(q) != 0:
         u = q[0]
         heapq.heappop(q)
-        #print q
         for i, e in enumerate(adj[u[1]]):
-            #print u, u[1]+1, e+1, dist[e], cost[u[1]][i]
             if dist[e] > dist[u[1]] + cost[u[1]][i]:
                 dist[e] = dist[u[1]] + cost[u[1]][i]
                 q = [(i,d) for d, i in enumerate(dist)]
