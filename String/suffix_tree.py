@@ -29,6 +29,10 @@ def reConstruct(tree, node, text, result):
     if (len(tree[node]) == 1):
         for n in tree[node]:
             text = text + n
+
+            if (len(tree[tree[node][n]]) > 1):
+                result.append(text)
+                text = ""
             reConstruct(tree, tree[node][n], text, result)
     elif (len(tree[node]) > 1):
         for n in tree[node]:
@@ -51,7 +55,6 @@ def build_suffix_tree(text):
         t.append(text[i:])
 
     tree = build_trie(t)
-    print tree
 
     result = []
 
@@ -61,8 +64,8 @@ def build_suffix_tree(text):
 
 
 if __name__ == '__main__':
-  #text = sys.stdin.readline().strip()
-  text = "ACACAA$"
+  text = sys.stdin.readline().strip()
+  #text = "ACACAA$"
 
   result = build_suffix_tree(text)
   print("\n".join(result))
