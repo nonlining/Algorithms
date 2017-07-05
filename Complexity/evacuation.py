@@ -51,14 +51,10 @@ class FlowGraph:
 
 def read_data():
     vertex_count, edge_count = map(int, raw_input().strip().split(' '))
-    #vertex_count = 4
-    #edge_count = 5
 
     graph = FlowGraph(vertex_count)
-    #data = [[1, 2, 10000] ,[1, 3, 10000], [2, 3, 1], [3, 4, 10000], [2, 4, 10000]]
     for _ in range(edge_count):
         u, v, capacity = map(int, raw_input().strip().split(' '))
-        #u, v, capacity = data[_]
         graph.add_edge(u - 1, v - 1, capacity)
     return graph
 
@@ -74,14 +70,11 @@ def BFS(graph, s, t, parent, pathIds):
     while queue:
         u = queue.pop(0)
         for _ , val in enumerate(graph.get_ids(u)):
-            #if val & 1:
-            #    print "p:",val,"-", graph.get_edge(val).u, "to", graph.get_edge(val).v, graph.get_edge(val).capacity, graph.get_edge(val).flow
-            #else:
-            #    print "p:",val,"-", graph.get_edge(val).u, "to", graph.get_edge(val).v, graph.get_edge(val).capacity, graph.get_edge(val).flow
 
             ind = graph.get_edge(val).v
 
-            if visited[ind] == False and graph.get_edge(val).capacity > graph.get_edge(val).flow :
+
+            if visited[ind] == False and graph.get_edge(val).capacity - graph.get_edge(val).flow > 0:
                 queue.append(ind)
                 visited[ind] = True
                 parent[ind] = u
@@ -97,19 +90,18 @@ def max_flow(graph, from_, to):
     count = 0
 
     while(BFS(graph, from_, to, pre, pathIds)):
-        count += 1
-        #if count > 2:
-        #    break
-        #print count ,"=================="
 
         path_flow = float("Inf")
         s = to
         while(s !=  from_):
-            path_flow = min (path_flow, graph.get_edge(pathIds[s]).capacity)
+
+            path_flow = min (path_flow, graph.get_edge(pathIds[s]).capacity - graph.get_edge(pathIds[s]).flow)
             s = pre[s]
+
         flow += path_flow
         v = to
         while(v != from_):
+
             graph.add_flow(pathIds[v], path_flow)
             v = pre[v]
 
